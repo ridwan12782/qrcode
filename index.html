@@ -1,40 +1,29 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const qrResult = document.getElementById('qr-result');
-  const qrReader = new Html5Qrcode("qr-reader");
-
-  function onScanSuccess(decodedText, decodedResult) {
-    qrResult.textContent = `QR Code Result: ${decodedText}`;
-    qrReader.stop().catch((err) => {
-      console.error("Failed to stop the scanner", err);
-    });
-  }
-
-  function onScanError(errorMessage) {
-    console.error(`QR Code Scan Error: ${errorMessage}`);
-  }
-
-  const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-
-  function startScanner() {
-    qrReader.start(
-      { facingMode: "environment" },
-      config,
-      onScanSuccess,
-      onScanError
-    ).catch((err) => {
-      console.error("Failed to start the scanner", err);
-      qrResult.textContent = 'Failed to start QR Code scanner. Check your permissions and ensure the camera is not used by another application.';
-    });
-  }
-
-  document.getElementById('reload').addEventListener('click', () => {
-    qrReader.stop().then(() => {
-      startScanner();
-    }).catch((err) => {
-      console.error("Failed to stop the scanner", err);
-      qrResult.textContent = 'Failed to reload the scanner. Check console for errors.';
-    });
-  });
-
-  startScanner();
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <title>Iwonk's Wi-Fi QR Code Scanner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="main">
+    <div id="mainbody">
+      <div class="camera-container">
+        <div id="qr-reader" class="camera"></div>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 10px;">
+        <button class="btn" id="reload">Reload Camera</button>
+      </div>
+      <div id="qr-result">QR Code result will appear here</div>
+    </div>
+  </div>
+  <div class="footer">
+    Iwonk's Wi-Fi QR CODE SCANNER<br>
+    Powered by <a href="https://github.com/mebjas/html5-qrcode" target="_blank">html5-qrcode</a>
+  </div>
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>
