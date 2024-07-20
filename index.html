@@ -11,7 +11,7 @@
   <div id="main">
     <div id="mainbody">
       <div class="camera-container">
-        <video id="camera-stream" class="camera" autoplay></video>
+        <div id="qr-reader" class="camera"></div>
         <div class="overlay"></div>
       </div>
       <div style="display: flex; justify-content: center; gap: 10px;">
@@ -22,63 +22,14 @@
           <i class="icon icon-chrome-1">&#xf268;</i> Open in Chrome
         </a>
       </div>
-      <div id="qr-result"></div>
+      <div id="qr-result">QR Code result will appear here</div>
     </div>
   </div>
   <div class="footer">
     Iwonk's Wi-Fi QR CODE SCANNER<br>
-    Powered by <a href="http://www.webqr.com" target="_blank">webqr.com</a>
+    Powered by <a href="https://github.com/mebjas/html5-qrcode" target="_blank">html5-qrcode</a>
   </div>
-  <canvas style="display:none;" id="qr-canvas" width="800" height="600"></canvas>
-  <script type="text/javascript" src="llqrcode.js"></script>
-  <script type="text/javascript" src="pemantaujaringan_webqr.js?v1"></script>
-  <script async src="https://arc.io/widget.min.js#rDZc6s4f"></script>
-  <script>
-    const qrCanvas = document.getElementById('qr-canvas');
-    const qrResult = document.getElementById('qr-result');
-    const cameraStream = document.getElementById('camera-stream');
-    const overlay = document.querySelector('.overlay');
-    const reloadButton = document.getElementById('reload');
-
-    let scanner;
-
-    function startScanner() {
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-        .then(stream => {
-          cameraStream.srcObject = stream;
-          cameraStream.play();
-          scanner = new WebQRScanner({ video: cameraStream, canvas: qrCanvas });
-          scanner.start(scanQRCode);
-        })
-        .catch(error => {
-          console.error('Error accessing camera:', error);
-          qrResult.textContent = 'Cannot access camera. Please grant permission.';
-        });
-    }
-
-    function scanQRCode(result) {
-      if (result) {
-        qrResult.textContent = `QR Code Result: ${result}`;
-
-        // Example: Open URL if QR code contains a URL
-        try {
-          new URL(result);
-          window.open(result, '_blank'); // Open in a new tab
-        } catch (_) {
-          // If result is not a URL, display it as text
-          qrResult.textContent = `QR Code Result: ${result}`;
-        }
-      }
-    }
-
-    reloadButton.addEventListener('click', () => {
-      if (scanner) {
-        scanner.stop();
-      }
-      startScanner();
-    });
-
-    startScanner();
-  </script>
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+  <script src="scripts.js"></script>
 </body>
 </html>
