@@ -59,6 +59,15 @@
     function scanQRCode(result) {
       if (result) {
         qrResult.textContent = `QR Code Result: ${result}`;
+
+        // Example: Open URL if QR code contains a URL
+        try {
+          new URL(result);
+          window.open(result, '_blank'); // Open in a new tab
+        } catch (_) {
+          // If result is not a URL, display it as text
+          qrResult.textContent = `QR Code Result: ${result}`;
+        }
       }
     }
 
