@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       onScanError
     ).catch((err) => {
       console.error("Failed to start the scanner", err);
-      qrResult.textContent = 'Failed to start QR Code scanner. Check your permissions.';
+      qrResult.textContent = 'Failed to start QR Code scanner. Check your permissions and ensure the camera is not used by another application.';
     });
   }
 
