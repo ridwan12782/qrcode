@@ -30,9 +30,6 @@
     Powered by <a href="http://www.webqr.com" target="_blank">webqr.com</a>
   </div>
   <canvas style="display:none;" id="qr-canvas" width="800" height="600"></canvas>
-  <script type="text/javascript" src="llqrcode.js"></script>
-  <script type="text/javascript" src="pemantaujaringan_webqr.js?v1"></script>
-  <script async src="https://arc.io/widget.min.js#rDZc6s4f"></script>
   <script>
     const qrCanvas = document.getElementById('qr-canvas');
     const qrResult = document.getElementById('qr-result');
@@ -52,7 +49,7 @@
         })
         .catch(error => {
           console.error('Error accessing camera:', error);
-          qrResult.textContent = 'Cannot access camera. Please grant permission.';
+          qrResult.textContent = 'Cannot access camera. Please ensure that your camera is not being used by another application and that you have granted the necessary permissions.';
         });
     }
 
