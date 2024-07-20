@@ -11,7 +11,7 @@
   <div id="main">
     <div id="mainbody">
       <div class="camera-container">
-        <video id="camera-stream" class="camera" autoplay></video>
+        <div id="qr-reader" style="width: 100%;"></div>
         <div class="overlay"></div>
       </div>
       <div style="display: flex; justify-content: center; gap: 10px;">
@@ -22,51 +22,44 @@
           <i class="icon icon-chrome-1">&#xf268;</i> Open in Chrome
         </a>
       </div>
-      <div id="qr-result"></div>
+      <div id="qr-result">QR Code result will appear here</div>
     </div>
   </div>
   <div class="footer">
     Iwonk's Wi-Fi QR CODE SCANNER<br>
     Powered by <a href="http://www.webqr.com" target="_blank">webqr.com</a>
   </div>
-  <canvas style="display:none;" id="qr-canvas" width="800" height="600"></canvas>
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
   <script>
-    const qrCanvas = document.getElementById('qr-canvas');
     const qrResult = document.getElementById('qr-result');
-    const cameraStream = document.getElementById('camera-stream');
-    const overlay = document.querySelector('.overlay');
-    const reloadButton = document.getElementById('reload');
+    const qrReader = new Html5Qrcode("qr-reader");
 
-    async function startScanner() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-        cameraStream.srcObject = stream;
-        cameraStream.play();
-        scanner = new WebQRScanner({ video: cameraStream, canvas: qrCanvas });
-        scanner.start(scanQRCode);
-      } catch (error) {
-        console.error('Error accessing camera:', error);
-        qrResult.textContent = 'Cannot access camera. Please check your permissions and ensure no other application is using the camera.';
-      }
+    function onScanSuccess(decodedText, decodedResult) {
+      qrResult.textContent = `QR Code Result: ${decodedText}`;
+      qrReader.stop().catch((err) => {
+        console.error("Failed to stop the scanner", err);
+      });
     }
 
-    function scanQRCode(result) {
-      if (result) {
-        qrResult.textContent = `QR Code Result: ${result}`;
-        try {
-          new URL(result);
-          window.open(result, '_blank'); // Open in a new tab
-        } catch (_) {
-          qrResult.textContent = `QR Code Result: ${result}`;
-        }
-      }
+    function onScanError(errorMessage) {
+      console.error(`QR Code Scan Error: ${errorMessage}`);
     }
 
-    reloadButton.addEventListener('click', () => {
-      if (scanner) {
-        scanner.stop();
-      }
-      startScanner();
+    const config = { fps: 10, qrbox: 250 };
+
+    function startScanner() {
+      qrReader.start({ facingMode: "environment" }, config, onScanSuccess, onScanError)
+      .catch((err) => {
+        console.error("Failed to start the scanner", err);
+      });
+    }
+
+    document.getElementById('reload').addEventListener('click', () => {
+      qrReader.stop().then(() => {
+        startScanner();
+      }).catch((err) => {
+        console.error("Failed to stop the scanner", err);
+      });
     });
 
     startScanner();
