@@ -5,20 +5,115 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#000000">
   <title>Iwonk's Wi-Fi QR Code Scanner</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    #main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    #mainbody {
+      background-color: #1c1c1c;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 600px;
+    }
+    .camera-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+    }
+    #qr-reader {
+      width: 100%;
+      border-radius: 8px;
+      background-color: #333;
+      border: 2px solid #fff;
+    }
+    .overlay {
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      width: 80%;
+      height: 80%;
+      border: 2px dashed #0f0;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #f2f2f2;
+      color: #000;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s, transform 0.2s;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background-color: #e0e0e0;
+      transform: scale(1.05);
+    }
+    .btn i {
+      margin-right: 8px;
+    }
+    a {
+      color: #20a8d8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .footer {
+      margin-top: 20px;
+    }
+    .footer a {
+      color: #20a8d8;
+    }
+    #qr-result {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      color: #0f0;
+    }
+    @media (max-width: 600px) {
+      .btn {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+      }
+      #qr-result {
+        font-size: 1rem;
+      }
+      .camera-container {
+        max-width: 100%;
+        height: 100px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div id="main">
     <div id="mainbody">
       <div class="camera-container">
-        <video id="camera-stream" class="camera" autoplay></video>
+        <div id="qr-reader"></div>
         <div class="overlay"></div>
       </div>
       <div style="display: flex; justify-content: center; gap: 10px;">
         <button class="btn" id="reload">
           <i class="icon icon-arrows-cw">&#xe800;</i> Reload Camera
         </button>
-        <a class="btn" href="intent://ridwan12782/qrcode#Intent;scheme=http;package=com.android.chrome;end">
+        <a class="btn" href="intent://ridwan12782.github.io/qrcode#Intent;scheme=http;package=com.android.chrome;end">
           <i class="icon icon-chrome-1">&#xf268;</i> Open in Chrome
         </a>
       </div>
@@ -29,33 +124,32 @@
     Iwonk's Wi-Fi QR CODE SCANNER<br>
     Powered by <a href="http://www.webqr.com" target="_blank">webqr.com</a>
   </div>
-  <canvas style="display:none;" id="qr-canvas" width="800" height="600"></canvas>
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
   <script>
-    const qrCanvas = document.getElementById('qr-canvas');
     const qrResult = document.getElementById('qr-result');
-    const cameraStream = document.getElementById('camera-stream');
-    const reloadButton = document.getElementById('reload');
-    
-    async function startScanner() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-        cameraStream.srcObject = stream;
-        cameraStream.play();
-        startQRCodeScanner();
-      } catch (error) {
-        console.error('Error accessing camera:', error);
-        qrResult.textContent = 'Cannot access camera. Please check your permissions and try again.';
-      }
+    const qrReader = new Html5Qrcode("qr-reader");
+
+    function onScanSuccess(decodedText, decodedResult) {
+      qrResult.textContent = `QR Code Result: ${decodedText}`;
+      qrReader.stop().catch((err) => {
+        console.error("Failed to stop the scanner", err);
+      });
     }
 
-    function startQRCodeScanner() {
-      // This is where you should integrate your QR code scanning logic
-      // For example, you might use a library like `jsQR` or `html5-qrcode`
+    function onScanError(errorMessage) {
+      console.error(`QR Code Scan Error: ${errorMessage}`);
     }
 
-    reloadButton.addEventListener('click', () => {
-      startScanner();
-    });
+    const config = { fps: 10, qrbox: 250 };
+
+    function startScanner() {
+      qrReader.start({ facingMode: "environment" }, config, onScanSuccess, onScanError)
+      .catch((err) => {
+        console.error("Failed to start the scanner", err);
+      });
+    }
+
+    document.getElementById('reload').addEventListener('click', startScanner);
 
     startScanner();
   </script>
