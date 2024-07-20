@@ -11,7 +11,7 @@
   <div id="main">
     <div id="mainbody">
       <div class="camera-container">
-        <div id="qr-reader" class="camera"></div>
+        <video id="camera-stream" class="camera" autoplay></video>
         <div class="overlay"></div>
       </div>
       <div style="display: flex; justify-content: center; gap: 10px;">
@@ -29,32 +29,33 @@
     Iwonk's Wi-Fi QR CODE SCANNER<br>
     Powered by <a href="http://www.webqr.com" target="_blank">webqr.com</a>
   </div>
-  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+  <canvas style="display:none;" id="qr-canvas" width="800" height="600"></canvas>
   <script>
+    const qrCanvas = document.getElementById('qr-canvas');
     const qrResult = document.getElementById('qr-result');
-    const reader = new Html5Qrcode("qr-reader");
-
-    function onScanSuccess(decodedText, decodedResult) {
-      qrResult.textContent = `QR Code Result: ${decodedText}`;
-      reader.stop().catch((err) => {
-        console.error("Failed to stop the scanner", err);
-      });
+    const cameraStream = document.getElementById('camera-stream');
+    const reloadButton = document.getElementById('reload');
+    
+    async function startScanner() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        cameraStream.srcObject = stream;
+        cameraStream.play();
+        startQRCodeScanner();
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        qrResult.textContent = 'Cannot access camera. Please check your permissions and try again.';
+      }
     }
 
-    function onScanError(errorMessage) {
-      console.error(`QR Code Scan Error: ${errorMessage}`);
+    function startQRCodeScanner() {
+      // This is where you should integrate your QR code scanning logic
+      // For example, you might use a library like `jsQR` or `html5-qrcode`
     }
 
-    const config = { fps: 10, qrbox: 250 };
-
-    function startScanner() {
-      reader.start({ facingMode: "environment" }, config, onScanSuccess, onScanError)
-      .catch((err) => {
-        console.error("Failed to start the scanner", err);
-      });
-    }
-
-    document.getElementById('reload').addEventListener('click', startScanner);
+    reloadButton.addEventListener('click', () => {
+      startScanner();
+    });
 
     startScanner();
   </script>
