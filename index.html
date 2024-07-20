@@ -14,7 +14,7 @@
         <video id="camera-stream" class="camera" autoplay></video>
         <div class="overlay"></div>
       </div>
-      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+      <div style="display: flex; justify-content: center; gap: 10px;">
         <button class="btn" id="reload">
           <i class="icon icon-arrows-cw">&#xe800;</i> Reload Camera
         </button>
@@ -32,38 +32,53 @@
   <canvas style="display:none;" id="qr-canvas" width="800" height="600"></canvas>
   <script type="text/javascript" src="llqrcode.js"></script>
   <script type="text/javascript" src="pemantaujaringan_webqr.js?v1"></script>
+  <script async src="https://arc.io/widget.min.js#rDZc6s4f"></script>
   <script>
-    // JavaScript for initializing and handling QR code scanning
-    const video = document.getElementById('camera-stream');
-    const canvas = document.getElementById('qr-canvas');
-    const context = canvas.getContext('2d');
+    const qrCanvas = document.getElementById('qr-canvas');
     const qrResult = document.getElementById('qr-result');
+    const cameraStream = document.getElementById('camera-stream');
+    const overlay = document.querySelector('.overlay');
+    const reloadButton = document.getElementById('reload');
 
-    // Access camera
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-      .then(stream => {
-        video.srcObject = stream;
-        video.play();
-        startScanning();
-      })
-      .catch(err => {
-        console.error("Error accessing camera: ", err);
-      });
+    let scanner;
 
-    function startScanning() {
-      const qr = new QCodeDecoder();
-      qr.decodeFromCamera(video)
-        .then(result => {
-          qrResult.textContent = result;
+    function startScanner() {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+        .then(stream => {
+          cameraStream.srcObject = stream;
+          cameraStream.play();
+          scanner = new WebQRScanner({ video: cameraStream, canvas: qrCanvas });
+          scanner.start(scanQRCode);
         })
-        .catch(err => {
-          console.error("QR code decoding failed: ", err);
+        .catch(error => {
+          console.error('Error accessing camera:', error);
+          qrResult.textContent = 'Cannot access camera. Please grant permission.';
         });
     }
 
-    document.getElementById('reload').addEventListener('click', () => {
-      startScanning();
+    function scanQRCode(result) {
+      if (result) {
+        qrResult.textContent = `QR Code Result: ${result}`;
+
+        // Example: Open URL if QR code contains a URL
+        try {
+          new URL(result);
+          window.open(result, '_blank'); // Open in a new tab
+        } catch (_) {
+          // If result is not a URL, display it as text
+          qrResult.textContent = `QR Code Result: ${result}`;
+        }
+      }
+    }
+
+    reloadButton.addEventListener('click', () => {
+      if (scanner) {
+        scanner.stop();
+      }
+      startScanner();
     });
+
+    startScanner();
   </script>
 </body>
 </html>
