@@ -3,36 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#000000">
-  <title>Iwonk's Wi-Fi QR Code Scanner</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>QR Code Reader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #qr-reader {
+      width: 300px;
+      height: 300px;
+      border: 1px solid #ccc;
+    }
+    #qr-result {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <div id="main">
-    <div id="mainbody">
-      <div class="camera-container">
-        <div id="qr-reader"></div>
-        <div class="overlay"></div>
-      </div>
-      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
-        <button class="btn" id="reload">
-          <i class="icon icon-arrows-cw">&#xe800;</i> Reload Camera
-        </button>
-        <a class="btn" href="intent://ridwan12782/qrcode#Intent;scheme=http;package=com.android.chrome;end">
-          <i class="icon icon-chrome-1">&#xf268;</i> Open in Chrome
-        </a>
-      </div>
-      <div id="qr-result">QR Code result will appear here</div>
-    </div>
+    <div id="qr-reader"></div>
+    <div id="qr-result">QR Code result will appear here</div>
+    <button id="reload">Reload Camera</button>
   </div>
-  <div class="footer">
-    Iwonk's Wi-Fi QR CODE SCANNER<br>
-    Powered by <a href="http://www.webqr.com" target="_blank">webqr.com</a>
-  </div>
+
   <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-  <script src="arc-sw.js"></script>
-  <script src="llqrcode.js"></script>
-  <script src="pemantaujaringan_webqr.js"></script>
   <script>
     const qrResult = document.getElementById('qr-result');
     const qrReader = new Html5Qrcode("qr-reader");
