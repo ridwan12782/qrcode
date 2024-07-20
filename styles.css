@@ -1,92 +1,115 @@
 /* styles.css */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #e9ecef;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-header {
-  background-color: #007bff;
+  background-color: #000;
   color: #fff;
-  width: 100%;
-  padding: 1rem 0;
+  font-family: Arial, sans-serif;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
   margin: 0;
-  font-size: 2rem;
-  font-weight: 600;
+  padding: 20px;
 }
 
-main {
-  padding: 2rem;
-  max-width: 800px;
-  width: 100%;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 1rem;
+#main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 20px;
 }
 
-#camera-container {
-  margin-bottom: 1.5rem;
-  width: 100%;
-  max-width: 100%;
-}
-
-video {
-  width: 100%;
+#mainbody {
+  background-color: #1c1c1c;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 600px;
 }
 
-button {
-  padding: 0.75rem 1.5rem;
-  font-size: 1.1rem;
+.camera-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%; /* Adjust to full width on smaller screens */
+  height: auto;
+}
+
+.camera {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background-color: #333;
+  border: 2px solid #fff; /* Optional: Add border for visibility */
+}
+
+.overlay {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  border: 2px dashed #0f0; /* Highlight area for QR code detection */
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f2f2f2;
+  color: #000;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
-  background-color: #28a745;
-  color: #fff;
   border: none;
-  border-radius: 5px;
   transition: background-color 0.3s, transform 0.2s;
+  text-decoration: none;
 }
 
-button:hover {
-  background-color: #218838;
+.btn:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.05);
 }
 
-button:active {
-  transform: scale(0.98);
+.btn i {
+  margin-right: 8px;
 }
 
-#result {
-  margin-top: 1.5rem;
-  padding: 1rem;
+a {
+  color: #20a8d8;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  margin-top: 20px;
+}
+
+.footer a {
+  color: #20a8d8;
+}
+
+#qr-result {
+  margin-top: 10px;
   font-size: 1.2rem;
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  color: #0f0; /* Highlight result text */
 }
 
 @media (max-width: 600px) {
-  button {
-      font-size: 1rem;
-      padding: 0.5rem 1rem;
+  .btn {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
   }
 
-  #result {
-      font-size: 1rem;
-      padding: 0.75rem;
+  #qr-result {
+    font-size: 1rem;
+  }
+
+  .camera-container {
+    max-width: 100%; /* Full width on small screens */
+  }
+
+  .camera {
+    height: 300px; /* Fixed height for better visibility on mobile devices */
   }
 }

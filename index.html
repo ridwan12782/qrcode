@@ -4,78 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#000000">
-  <title>Wi-Fi QR Code Scanner</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-    }
-    #main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    #mainbody {
-      background-color: #1c1c1c;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-      width: 100%;
-      max-width: 600px;
-    }
-    .camera {
-      width: 100%;
-      height: auto;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      background-color: #333;
-    }
-    .btn {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #f2f2f2;
-      color: #000;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      transition: background-color 0.3s, transform 0.2s;
-      text-decoration: none;
-    }
-    .btn:hover {
-      background-color: #e0e0e0;
-      transform: scale(1.05);
-    }
-    .btn i {
-      margin-right: 8px;
-    }
-    a {
-      color: #20a8d8;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .footer {
-      margin-top: 20px;
-    }
-    .footer a {
-      color: #20a8d8;
-    }
-  </style>
+  <title>Iwonk's Wi-Fi QR Code Scanner</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div id="main">
     <div id="mainbody">
-      <div class="camera" id="outdiv">
-        <video id="camera-stream" autoplay></video>
+      <div class="camera-container">
+        <video id="camera-stream" class="camera" autoplay></video>
+        <div class="overlay"></div>
       </div>
-      <div style="display: flex; justify-content: center; gap: 10px;">
+      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
         <button class="btn" id="reload">
           <i class="icon icon-arrows-cw">&#xe800;</i> Reload Camera
         </button>
@@ -83,6 +22,7 @@
           <i class="icon icon-chrome-1">&#xf268;</i> Open in Chrome
         </a>
       </div>
+      <div id="qr-result"></div>
     </div>
   </div>
   <div class="footer">
