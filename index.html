@@ -32,6 +32,38 @@
   <canvas style="display:none;" id="qr-canvas" width="800" height="600"></canvas>
   <script type="text/javascript" src="llqrcode.js"></script>
   <script type="text/javascript" src="pemantaujaringan_webqr.js?v1"></script>
-  <script async src="https://arc.io/widget.min.js#rDZc6s4f"></script>
+  <script>
+    // JavaScript for initializing and handling QR code scanning
+    const video = document.getElementById('camera-stream');
+    const canvas = document.getElementById('qr-canvas');
+    const context = canvas.getContext('2d');
+    const qrResult = document.getElementById('qr-result');
+
+    // Access camera
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+      .then(stream => {
+        video.srcObject = stream;
+        video.play();
+        startScanning();
+      })
+      .catch(err => {
+        console.error("Error accessing camera: ", err);
+      });
+
+    function startScanning() {
+      const qr = new QCodeDecoder();
+      qr.decodeFromCamera(video)
+        .then(result => {
+          qrResult.textContent = result;
+        })
+        .catch(err => {
+          console.error("QR code decoding failed: ", err);
+        });
+    }
+
+    document.getElementById('reload').addEventListener('click', () => {
+      startScanning();
+    });
+  </script>
 </body>
 </html>
