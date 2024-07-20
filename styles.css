@@ -1,8 +1,7 @@
-/* styles.css */
 body {
   background-color: #000;
   color: #fff;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
   margin: 0;
   padding: 20px;
@@ -17,26 +16,27 @@ body {
 
 #mainbody {
   background-color: #1c1c1c;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
 }
 
 .camera-container {
   position: relative;
   width: 100%;
-  max-width: 100%; /* Adjust to full width on smaller screens */
-  height: auto;
+  max-width: 400px;
+  height: 300px; /* Adjust height to better fit the camera view */
+  margin: 0 auto;
 }
 
 .camera {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
+  height: 100%;
+  border-radius: 10px;
   background-color: #333;
-  border: 2px solid #fff; /* Optional: Add border for visibility */
+  border: 3px solid rgba(255, 255, 255, 0.5);
 }
 
 .overlay {
@@ -45,16 +45,17 @@ body {
   left: 10%;
   width: 80%;
   height: 80%;
-  border: 2px dashed #0f0; /* Highlight area for QR code detection */
-  border-radius: 8px;
+  border: 3px dashed rgba(0, 255, 0, 0.7);
+  border-radius: 10px;
   pointer-events: none;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 }
 
 .btn {
   display: inline-block;
-  padding: 10px 20px;
-  background-color: #f2f2f2;
-  color: #000;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: #fff;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
@@ -64,7 +65,7 @@ body {
 }
 
 .btn:hover {
-  background-color: #e0e0e0;
+  background-color: #0056b3;
   transform: scale(1.05);
 }
 
@@ -73,7 +74,7 @@ body {
 }
 
 a {
-  color: #20a8d8;
+  color: #17a2b8;
   text-decoration: none;
 }
 
@@ -83,33 +84,31 @@ a:hover {
 
 .footer {
   margin-top: 20px;
+  font-size: 14px;
 }
 
 .footer a {
-  color: #20a8d8;
+  color: #17a2b8;
 }
 
 #qr-result {
-  margin-top: 10px;
-  font-size: 1.2rem;
-  color: #0f0; /* Highlight result text */
+  margin-top: 15px;
+  font-size: 1.3rem;
+  color: #0f0;
 }
 
 @media (max-width: 600px) {
   .btn {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
+    font-size: 14px;
+    padding: 8px 16px;
   }
 
   #qr-result {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .camera-container {
-    max-width: 100%; /* Full width on small screens */
-  }
-
-  .camera {
-    height: 300px; /* Fixed height for better visibility on mobile devices */
+    max-width: 100%;
+    height: 200px; /* Reduce height on mobile devices */
   }
 }
