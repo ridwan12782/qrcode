@@ -113,7 +113,7 @@
         <button class="btn" id="reload">
           <i class="icon icon-arrows-cw">&#xe800;</i> Reload Camera
         </button>
-        <a class="btn" href="intent://ridwan12782.github.io/qrcode#Intent;scheme=http;package=com.android.chrome;end">
+        <a class="btn" href="intent://ridwan12782/qrcode#Intent;scheme=http;package=com.android.chrome;end">
           <i class="icon icon-chrome-1">&#xf268;</i> Open in Chrome
         </a>
       </div>
@@ -131,9 +131,6 @@
 
     function onScanSuccess(decodedText, decodedResult) {
       qrResult.textContent = `QR Code Result: ${decodedText}`;
-      qrReader.stop().catch((err) => {
-        console.error("Failed to stop the scanner", err);
-      });
     }
 
     function onScanError(errorMessage) {
@@ -143,8 +140,12 @@
     const config = { fps: 10, qrbox: 250 };
 
     function startScanner() {
-      qrReader.start({ facingMode: "environment" }, config, onScanSuccess, onScanError)
-      .catch((err) => {
+      qrReader.start(
+        { facingMode: "environment" },
+        config,
+        onScanSuccess,
+        onScanError
+      ).catch((err) => {
         console.error("Failed to start the scanner", err);
       });
     }
