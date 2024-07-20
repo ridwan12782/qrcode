@@ -1,41 +1,59 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const video = document.getElementById('camera-stream');
-    const canvas = document.getElementById('qr-canvas');
-    const context = canvas.getContext('2d');
-    const resultContainer = document.getElementById('qr-result');
+// pemantaujaringan_webqr.js
 
-    function startCamera() {
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-        .then((stream) => {
-            video.srcObject = stream;
-            video.setAttribute("playsinline", true);
-            video.play();
-            requestAnimationFrame(scanQRCode);
-        })
-        .catch((error) => {
-            console.error('Error accessing camera: ', error);
-        });
-    }
-
-    function scanQRCode() {
-        if (video.readyState === video.HAVE_ENOUGH_DATA) {
-            canvas.height = video.videoHeight;
-            canvas.width = video.videoWidth;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imageData.data, canvas.width, canvas.height, { 
-                inversionAttempts: "dontInvert" 
-            });
-            if (code) {
-                resultContainer.textContent = `QR Code Data: ${code.data}`;
-            }
-        }
-        requestAnimationFrame(scanQRCode);
-    }
-
-    document.getElementById('reload').addEventListener('click', () => {
-        startCamera();
-    });
-
-    startCamera();
+document.getElementById('start-scan').addEventListener('click', function() {
+    startScanning();
 });
+
+function startScanning() {
+    const video = document.getElementById('camera-stream');
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const resultElement = document.getElementById('qr-result');
+    
+    const constraints = {
+        video: {
+            facingMode: 'environment'
+        }
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then(stream => {
+            video.srcObject = stream;
+            video.play();
+
+            // Start scanning loop
+            requestAnimationFrame(scan);
+            
+            function scan() {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    // Set canvas dimensions to match video
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    
+                    // Draw video frame to canvas
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    // Get image data from canvas
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    
+                    // Decode QR code
+                    const code = jsQR(imageData.data, canvas.width, canvas.height, {
+                        inversionAttempts: "dontInvert",
+                    });
+
+                    if (code) {
+                        resultElement.textContent = code.data;
+                    } else {
+                        resultElement.textContent = "Scanning...";
+                    }
+                }
+
+                // Continue scanning
+                requestAnimationFrame(scan);
+            }
+        })
+        .catch(err => {
+            console.error('Error accessing camera: ', err);
+            resultElement.textContent = 'Error accessing camera. Please check your permissions.';
+        });
+}
