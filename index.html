@@ -131,6 +131,9 @@
 
     function onScanSuccess(decodedText, decodedResult) {
       qrResult.textContent = `QR Code Result: ${decodedText}`;
+      qrReader.stop().catch((err) => {
+        console.error("Failed to stop the scanner", err);
+      });
     }
 
     function onScanError(errorMessage) {
@@ -140,12 +143,8 @@
     const config = { fps: 10, qrbox: 250 };
 
     function startScanner() {
-      qrReader.start(
-        { facingMode: "environment" },
-        config,
-        onScanSuccess,
-        onScanError
-      ).catch((err) => {
+      qrReader.start({ facingMode: "environment" }, config, onScanSuccess, onScanError)
+      .catch((err) => {
         console.error("Failed to start the scanner", err);
       });
     }
