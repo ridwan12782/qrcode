@@ -11,10 +11,10 @@
   <div id="main">
     <div id="mainbody">
       <div class="camera-container">
-        <video id="camera-stream" class="camera" autoplay></video>
+        <div id="qr-reader"></div>
         <div class="overlay"></div>
       </div>
-      <div style="display: flex; justify-content: center; gap: 10px;">
+      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
         <button class="btn" id="reload">
           <i class="icon icon-arrows-cw">&#xe800;</i> Reload Camera
         </button>
@@ -22,15 +22,57 @@
           <i class="icon icon-chrome-1">&#xf268;</i> Open in Chrome
         </a>
       </div>
-      <div id="qr-result"></div>
+      <div id="qr-result">QR Code result will appear here</div>
     </div>
   </div>
   <div class="footer">
     Iwonk's Wi-Fi QR CODE SCANNER<br>
     Powered by <a href="http://www.webqr.com" target="_blank">webqr.com</a>
   </div>
-  <canvas style="display:none;" id="qr-canvas" width="800" height="600"></canvas>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsqr.min.js"></script>
-  <script type="text/javascript" src="app.js"></script>
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+  <script src="arc-sw.js"></script>
+  <script src="llqrcode.js"></script>
+  <script src="pemantaujaringan_webqr.js"></script>
+  <script>
+    const qrResult = document.getElementById('qr-result');
+    const qrReader = new Html5Qrcode("qr-reader");
+
+    function onScanSuccess(decodedText, decodedResult) {
+      qrResult.textContent = `QR Code Result: ${decodedText}`;
+      qrReader.stop().catch((err) => {
+        console.error("Failed to stop the scanner", err);
+      });
+    }
+
+    function onScanError(errorMessage) {
+      qrResult.textContent = `Scan Error: ${errorMessage}`;
+      console.error(`QR Code Scan Error: ${errorMessage}`);
+    }
+
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    function startScanner() {
+      qrReader.start(
+        { facingMode: "environment" },
+        config,
+        onScanSuccess,
+        onScanError
+      ).catch((err) => {
+        console.error("Failed to start the scanner", err);
+        qrResult.textContent = 'Failed to start QR Code scanner. Check your permissions.';
+      });
+    }
+
+    document.getElementById('reload').addEventListener('click', () => {
+      qrReader.stop().then(() => {
+        startScanner();
+      }).catch((err) => {
+        console.error("Failed to stop the scanner", err);
+        qrResult.textContent = 'Failed to reload the scanner. Check console for errors.';
+      });
+    });
+
+    startScanner();
+  </script>
 </body>
 </html>
