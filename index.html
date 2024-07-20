@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <title>Iwonk's Wi-Fi QR Code Scanner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="main">
+    <div id="mainbody">
+      <div class="camera-container">
+        <video id="camera-stream" class="camera" autoplay></video>
+        <canvas id="qr-canvas" style="display:none;"></canvas>
+        <div class="overlay"></div>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 10px;">
+        <button class="btn" id="reload">
+          <i class="icon icon-arrows-cw">&#xe800;</i> Reload Camera
+        </button>
+        <button class="btn" id="capture">
+          <i class="icon icon-camera">&#xe800;</i> Capture QR Code
+        </button>
+        <a class="btn" href="intent://ridwan12782/qrcode#Intent;scheme=http;package=com.android.chrome;end">
+          <i class="icon icon-chrome-1">&#xf268;</i> Open in Chrome
+        </a>
+      </div>
+      <div id="qr-result"></div>
+    </div>
+  </div>
+  <div class="footer">
+    Iwonk's Wi-Fi QR CODE SCANNER<br>
+    Powered by <a href="http://www.webqr.com" target="_blank">webqr.com</a>
+  </div>
+  <script type="text/javascript" src="llqrcode.js"></script>
+  <script type="text/javascript" src="pemantaujaringan_webqr.js?v1"></script>
+  <script async src="https://arc.io/widget.min.js#rDZc6s4f"></script>
+  <script type="text/javascript">
+    // Function to start the camera and request permission
+    function startCamera() {
+      const video = document.getElementById('camera-stream');
+      const canvas = document.getElementById('qr-canvas');
+      const context = canvas.getContext('2d');
+
+      // Request access to the camera
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then(stream => {
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch(error => {
+          console.error("Error accessing the camera: ", error);
+          alert("Error accessing the camera. Please check your camera permissions.");
+        });
+    }
+
+    // Function to capture an image from the video
+    function captureImage() {
+      const video = document.getElementById('camera-stream');
+      const canvas = document.getElementById('qr-canvas');
+      const context = canvas.getContext('2d');
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      // Use your QR code library to process imageData and decode the QR code
+      processQRCode(imageData);
+    }
+
+    // Function to process the QR code
+    function processQRCode(imageData) {
+      // Replace with actual QR code processing code
+      // For example, using a QR code library to decode the imageData
+      console.log("Processing QR code...");
+      // Example: qrcode.decode(imageData);
+    }
+
+    // Add event listeners for buttons
+    document.getElementById('reload').addEventListener('click', startCamera);
+    document.getElementById('capture').addEventListener('click', captureImage);
+
+    // Initialize the camera on page load
+    startCamera();
+  </script>
+</body>
+</html>
