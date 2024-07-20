@@ -30,9 +30,6 @@
     Powered by <a href="http://www.webqr.com" target="_blank">webqr.com</a>
   </div>
   <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-  <script src="arc-sw.js"></script>
-  <script src="llqrcode.js"></script>
-  <script src="pemantaujaringan_webqr.js"></script>
   <script>
     const qrResult = document.getElementById('qr-result');
     const qrReader = new Html5Qrcode("qr-reader");
@@ -51,16 +48,18 @@
 
     const config = { fps: 10, qrbox: { width: 250, height: 250 } };
 
-    function startScanner() {
-      qrReader.start(
-        { facingMode: "environment" },
-        config,
-        onScanSuccess,
-        onScanError
-      ).catch((err) => {
+    async function startScanner() {
+      try {
+        await qrReader.start(
+          { facingMode: "environment" },
+          config,
+          onScanSuccess,
+          onScanError
+        );
+      } catch (err) {
         console.error("Failed to start the scanner", err);
         qrResult.textContent = 'Failed to start QR Code scanner. Check your permissions.';
-      });
+      }
     }
 
     document.getElementById('reload').addEventListener('click', () => {
